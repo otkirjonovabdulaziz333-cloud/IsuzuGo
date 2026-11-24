@@ -136,7 +136,6 @@ const initDB = async () => {
     await run(`INSERT INTO settings (key, value) VALUES ('card_number', '9860 3501 4452 7890')`);
     await run(`INSERT INTO settings (key, value) VALUES ('card_holder', 'ISUZUGO LOGISTIKA MCHJ')`);
     await run(`INSERT INTO settings (key, value) VALUES ('support_phone', '+998 71 200 45 45')`);
-    await run(`INSERT INTO settings (key, value) VALUES ('admin_password', 'admin123')`);
   }
 
   // Seed default admin account if not exists
@@ -145,36 +144,6 @@ const initDB = async () => {
     await run(`
       INSERT INTO users (full_name, phone, email, role, keys_balance, is_verified)
       VALUES ('Bosh Administrator', '+998901234567', 'admin@isuzugo.uz', 'admin', 999, 1)
-    `);
-  }
-
-  // Seed initial demo brokers & orders so users immediately have realistic cargo data to browse!
-  const brokersCount = await get(`SELECT COUNT(*) as cnt FROM users WHERE role = 'broker'`);
-  if (brokersCount && brokersCount.cnt === 0) {
-    const broker1 = await run(`
-      INSERT INTO users (full_name, phone, email, role, keys_balance, is_verified)
-      VALUES ('Akmal Rahimov (Toshkent Logistika)', '+998901112233', 'akmal.logist@gmail.com', 'broker', 0, 1)
-    `);
-
-    const broker2 = await run(`
-      INSERT INTO users (full_name, phone, email, role, keys_balance, is_verified)
-      VALUES ('Sanjarbek Qodirov (Vodiy Ekspress)', '+998935557788', 'sanjar.broker@gmail.com', 'broker', 0, 1)
-    `);
-
-    const broker3 = await run(`
-      INSERT INTO users (full_name, phone, email, role, keys_balance, is_verified)
-      VALUES ('Rustam Saidov (Samarqand Kuryer)', '+998974443322', 'rustam.saidov@gmail.com', 'broker', 0, 1)
-    `);
-
-    // Add initial orders
-    await run(`
-      INSERT INTO orders (broker_id, broker_name, from_region, from_district, to_region, to_district, cargo_title, cargo_weight, body_type, price, contact_phone, notes, status)
-      VALUES 
-      (${broker1.id}, 'Akmal Rahimov (Toshkent Logistika)', 'Toshkent viloyati', 'Chinoz', 'Samarqand', 'Pastdarg‘om', 'Muzlatilgan tovuq go‘shti (-18°C)', '5.5 t', 'Muzlatkichli', '3 200 000 so‘m', '+998901112233', 'Tez yetkazib berish kerak, ertalab yuklanadi. Hujjatlari joyida.', 'active'),
-      (${broker1.id}, 'Akmal Rahimov (Toshkent Logistika)', 'Toshkent shahri', 'Sergeli', 'Farg‘ona', 'Qo‘qon', 'Oziq-ovqat mahsulotlari (quruq meva va qandolat)', '4.0 t', 'Tentli', '2 500 000 so‘m', '+998901112233', 'Borti baland Isuzu kerak. Yuklash va tushirish oson.', 'active'),
-      (${broker2.id}, 'Sanjarbek Qodirov (Vodiy Ekspress)', 'Andijon', 'Asaka', 'Toshkent shahri', 'Bektemir', 'Avto ehtiyot qismlari qutilarda', '3.8 t', 'Furgon', '2 800 000 so‘m', '+998935557788', 'Quruq furgon yoki yaxshi tentli Isuzu kerak. Tolov naqd yoki kartaga.', 'active'),
-      (${broker2.id}, 'Sanjarbek Qodirov (Vodiy Ekspress)', 'Namangan', 'Chust', 'Buxoro', 'Kogon', 'Pichoqlar va metall mahsulotlar', '2.5 t', 'Bortli', '3 500 000 so‘m', '+998935557788', 'Yuk tayyor, bugun kechqurun yo‘lga chiqish kerak.', 'active'),
-      (${broker3.id}, 'Rustam Saidov (Samarqand Kuryer)', 'Samarqand', 'Urgut', 'Toshkent shahri', 'Yunusobod', 'Qurilish mollari (plitka, kafel)', '6.0 t', 'Bortli', '2 600 000 so‘m', '+998974443322', 'Og‘irligi toza 6 tonna. Bortli yuk mashinasi.', 'active')
     `);
   }
 };
